@@ -19,11 +19,17 @@ import javafx.stage.Stage;
 public class App extends Application{
 
     //Width and height of the window
-    private final int WIDTH = 800;
-    private final int HEIGHT = 800;
+    static final int WIDTH = 800;
+    static final int HEIGHT = 800;
+    static final int BODY_SIZE = 40; 
+    static final int MAX_UNITS = (WIDTH * HEIGHT) / BODY_SIZE; //Max size of the snake
 
-    List<Rectangle> snakeBody = new ArrayList<>(); //A list of rectangles to represent the snake's body
-    Rectangle snakeHead; //snake's head
+    //Arrays of coordinates of the snake
+    final int x[] = new int[MAX_UNITS];
+    final int y[] = new int[MAX_UNITS];
+
+    //Initial snake size
+    int snakeBody = 3;
 
     private int dx = 1; //X direction of the snake
     private int dy = 0; //Y direction of the snake
@@ -35,25 +41,16 @@ public class App extends Application{
         Pane root = new Pane();
         Scene scene = new Scene(root, WIDTH, HEIGHT, Color.LIGHTGREEN);
 
-        //Create the rectangles that represent the snake
-        for (int i = 0; i < 1; i++) {
-            Rectangle rectangle = new Rectangle(40, 40);
-            rectangle.setFill(Color.DARKKHAKI);
-            snakeBody.add(rectangle);
-            root.getChildren().add(rectangle);
-        }
-        //Create the snake's head
-        snakeHead = snakeBody.get(0);
 
         root.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.RIGHT) {
-                moveRight();
+                move("R");
             } else if (event.getCode() == KeyCode.LEFT) {
-                moveLeft();
+                move("L");
             } else if (event.getCode() == KeyCode.UP) {
-                moveUp();
+                move("U");
             } else if (event.getCode() == KeyCode.DOWN) {
-                moveDown();
+                move("D");
             }
         });
         // Set the focus to the pane to receive key events
@@ -75,31 +72,30 @@ public class App extends Application{
     }
 
     public void update(){
-        snakeHead.setX(snakeHead.getX() + dx);
-        snakeHead.setY(snakeHead.getY() + dy);
+        
 }
 
-
-
-    private void moveRight() {
-        dx = 1;
-        dy = 0;
-}
-
-    private void moveLeft() {
-        dx = -1;
-        dy = 0;
-}
-
-    private void moveUp() {
-        dy = -1;
-        dx = 0;
-}
-
-    private void moveDown() {
-        dy = 1;
-        dx = 0;
-}
+    //A function that moves the snake
+    private void move(String direction) {
+        switch(direction) {
+            case "R":
+                dx = 1;
+                dy = 0;
+                break;
+            case "L":
+                dx = -1;
+                dy = 0;
+                break;
+            case "U":
+                dy = -1;
+                dx = 0;
+                break;
+            case "D":
+                dy = 1;
+                dy = 0;
+                break;
+        }
+    }
 
     public static void main(String[] args) throws Exception {
         launch(args);

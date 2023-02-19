@@ -25,7 +25,9 @@ public class App extends Application{
     List<Rectangle> snakeBody = new ArrayList<>(); //A list of rectangles to represent the snake's body
     Rectangle snakeHead; //snake's head
 
-    private String direction = "R"; //The direction of the snake's movement
+    private int dx = 1; //X direction of the snake
+    private int dy = 0; //Y direction of the snake
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -73,27 +75,31 @@ public class App extends Application{
     }
 
     public void update(){
-        for (int i = 0; i < snakeBody.size(); i++) {
-            snakeBody.get(i).setX(snakeBody.get(i).getX() + 1);
-        }
-    }
+        snakeHead.setX(snakeHead.getX() + dx);
+        snakeHead.setY(snakeHead.getY() + dy);
+}
+
+
 
     private void moveRight() {
-        snakeHead.setX(snakeHead.getX() + 1);
-    }
+        dx = 1;
+        dy = 0;
+}
 
     private void moveLeft() {
-        snakeHead.setX(snakeHead.getX() - 1);
-    }
+        dx = -1;
+        dy = 0;
+}
 
     private void moveUp() {
-        snakeHead.setY(snakeHead.getY() + 1);
-
-    }
+        dy = -1;
+        dx = 0;
+}
 
     private void moveDown() {
-        snakeHead.setY(snakeHead.getY() - 1);
-    }
+        dy = 1;
+        dx = 0;
+}
 
     public static void main(String[] args) throws Exception {
         launch(args);

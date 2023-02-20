@@ -25,12 +25,14 @@ public class App extends Application{
     //Width and height of the window
     static final int WIDTH = 800;
     static final int HEIGHT = 800;
-    static final int BODY_SIZE = 40; 
+    static final int BODY_SIZE = 40;
+    static final int FIELD_NUMBER = 20; 
     static final int MAX_UNITS = (WIDTH * HEIGHT) / BODY_SIZE; //Max size of the snake
 
     //Arrays of coordinates of the snake
     final int x[] = new int[MAX_UNITS];
     final int y[] = new int[MAX_UNITS];
+    String direction = "R";
 
     //Initial snake size
     int snakeBody = 3;
@@ -53,13 +55,21 @@ public class App extends Application{
 
         root.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.RIGHT) {
-                move("R");
+                if(direction != "L"){
+                    direction = "R";
+                }
             } else if (event.getCode() == KeyCode.LEFT) {
-                move("L");
+                if(direction != "R"){
+                    direction = "L";
+                };
             } else if (event.getCode() == KeyCode.UP) {
-                move("U");
+                if(direction != "D"){
+                    direction = "U";
+                }
             } else if (event.getCode() == KeyCode.DOWN) {
-                move("D");
+                if(direction != "U"){
+                    direction = "D";
+                }
             }
         });
         // Set the focus to the pane to receive key events
@@ -85,10 +95,20 @@ public class App extends Application{
 
     public void update(GraphicsContext gc){
         drawSnake(gc);
-        move("R");
+        move();
+    }
+
+    //Draw a grid over the scene, and set the color to black
+    public void drawGrid(GraphicsContext gc){
+        for(int i = 0; i < HEIGHT / BODY_SIZE; i++){
+            gc.strokeLine(i * BODY_SIZE, 0, i * BODY_SIZE, HEIGHT);
+            gc.strokeLine(0, i*BODY_SIZE, WIDTH, i*BODY_SIZE);
+            gc.setStroke(Color.BLACK);
+        }   
     }
 
     public void drawSnake(GraphicsContext gc){
+        //For loop to draw the snake
         for (int i = 0; i < snakeBody; i++) {
             if(i == 0){
                 gc.setFill(Color.BROWN);
@@ -100,18 +120,9 @@ public class App extends Application{
             }
         }
     }
-        
-    //Draw a grid over the scene, and set the color to black
-    public void drawGrid(GraphicsContext gc){
-        for(int i = 0; i < HEIGHT / BODY_SIZE; i++){
-            gc.strokeLine(i * BODY_SIZE, 0, i * BODY_SIZE, HEIGHT);
-            gc.strokeLine(0, i*BODY_SIZE, WIDTH, i*BODY_SIZE);
-            gc.setStroke(Color.BLACK);
-        }   
-    }
 
     //A function that moves the snake
-    private void move(String direction) {
+    private void move() {
         for (int i = snakeBody; i > 0; i--) {
             x[i] = x[i - 1];
             y[i] = y[i - 1];
@@ -131,7 +142,6 @@ public class App extends Application{
                 break;
         }
     }
-
     public static void main(String[] args) throws Exception {
         launch(args);
     }

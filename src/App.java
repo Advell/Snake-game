@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
-
+import javafx.animation.KeyFrame;
 import javafx.application.Application;
 
 
@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class App extends Application{
 
@@ -34,8 +35,9 @@ public class App extends Application{
     //Initial snake size
     int snakeBody = 3;
 
-    private int dx = 1; //X direction of the snake
-    private int dy = 0; //Y direction of the snake
+    //Time variables
+    private long lastUpdateTime = 0;
+    private final int updateInterval = 100; // 100 milliseconds
 
 
     @Override
@@ -64,13 +66,16 @@ public class App extends Application{
         root.requestFocus();
 
         //Create the animation timer which calls the update method on every frame
-        AnimationTimer timer = new AnimationTimer() {
+        AnimationTimer gameLoop = new AnimationTimer() {
             @Override
-            public void handle(long now) {
-                update(gc);
+            public void handle(long now) {                              // 1_000_000 nanoseconds
+                if (now - lastUpdateTime >= updateInterval * 1_000_000){ 
+                    update(gc);
+                    lastUpdateTime = now;
+                } 
             }
         };
-        timer.start(); //Start the animation timer
+        gameLoop.start(); //Start the animation timer
 
         stage.setScene(scene);
         stage.setResizable(false);

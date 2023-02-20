@@ -5,10 +5,13 @@ import javafx.animation.AnimationTimer;
 
 import javafx.application.Application;
 
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -39,8 +42,12 @@ public class App extends Application{
     public void start(Stage stage) throws Exception {
         
         Pane root = new Pane();
-        Scene scene = new Scene(root, WIDTH, HEIGHT, Color.LIGHTGREEN);
+        Canvas canvas = new Canvas(WIDTH, HEIGHT);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        drawGrid(gc);
 
+        root.getChildren().add(canvas);
+        Scene scene = new Scene(root, WIDTH, HEIGHT, Color.LIGHTGREEN);
 
         root.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.RIGHT) {
@@ -60,7 +67,7 @@ public class App extends Application{
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                update();
+                update(gc);
             }
         };
         timer.start(); //Start the animation timer
@@ -71,28 +78,51 @@ public class App extends Application{
         stage.show();
     }
 
-    public void update(){
+    public void update(GraphicsContext gc){
+        drawSnake(gc);
+        move("R");
+    }
+
+    public void drawSnake(GraphicsContext gc){
+        for (int i = 0; i < snakeBody; i++) {
+            if(i == 0){
+                gc.setFill(Color.BROWN);
+                gc.fillRect(x[i], y[i], BODY_SIZE, BODY_SIZE);
+            }
+            else{
+                gc.setFill(Color.DARKKHAKI);
+                gc.fillRect(x[i], y[i], BODY_SIZE, BODY_SIZE);
+            }
+        }
+    }
         
-}
+    //Draw a grid over the scene, and set the color to black
+    public void drawGrid(GraphicsContext gc){
+        for(int i = 0; i < HEIGHT / BODY_SIZE; i++){
+            gc.strokeLine(i * BODY_SIZE, 0, i * BODY_SIZE, HEIGHT);
+            gc.strokeLine(0, i*BODY_SIZE, WIDTH, i*BODY_SIZE);
+            gc.setStroke(Color.BLACK);
+        }   
+    }
 
     //A function that moves the snake
     private void move(String direction) {
+        for (int i = snakeBody; i > 0; i--) {
+            x[i] = x[i - 1];
+            y[i] = y[i - 1];
+        }
         switch(direction) {
             case "R":
-                dx = 1;
-                dy = 0;
+                x[0] = x[0] + BODY_SIZE;
                 break;
             case "L":
-                dx = -1;
-                dy = 0;
+                x[0] = x[0] - BODY_SIZE;
                 break;
             case "U":
-                dy = -1;
-                dx = 0;
+                y[0] = y[0] - BODY_SIZE;
                 break;
             case "D":
-                dy = 1;
-                dy = 0;
+                y[0] = y[0] + BODY_SIZE;
                 break;
         }
     }

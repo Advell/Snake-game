@@ -26,7 +26,8 @@ public class App extends Application{
     static final int WIDTH = 800;
     static final int HEIGHT = 800;
     static final int BODY_SIZE = 40;
-    static final int FIELD_NUMBER = 20; 
+    static final int ROWS = 20; 
+    static final int COLUMNS = 20; 
     static final int MAX_UNITS = (WIDTH * HEIGHT) / BODY_SIZE; //Max size of the snake
 
     //Arrays of coordinates of the snake
@@ -39,7 +40,7 @@ public class App extends Application{
 
     //Time variables
     private long lastUpdateTime = 0;
-    private final int updateInterval = 100; // 100 milliseconds
+    private final int updateInterval = 150; // 100 milliseconds
 
 
     @Override
@@ -48,7 +49,6 @@ public class App extends Application{
         Pane root = new Pane();
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawGrid(gc);
 
         root.getChildren().add(canvas);
         Scene scene = new Scene(root, WIDTH, HEIGHT, Color.LIGHTGREEN);
@@ -94,17 +94,9 @@ public class App extends Application{
     }
 
     public void update(GraphicsContext gc){
+        drawBackground(gc);
         drawSnake(gc);
         move();
-    }
-
-    //Draw a grid over the scene, and set the color to black
-    public void drawGrid(GraphicsContext gc){
-        for(int i = 0; i < HEIGHT / BODY_SIZE; i++){
-            gc.strokeLine(i * BODY_SIZE, 0, i * BODY_SIZE, HEIGHT);
-            gc.strokeLine(0, i*BODY_SIZE, WIDTH, i*BODY_SIZE);
-            gc.setStroke(Color.BLACK);
-        }   
     }
 
     public void drawSnake(GraphicsContext gc){
@@ -117,6 +109,19 @@ public class App extends Application{
             else{
                 gc.setFill(Color.DARKKHAKI);
                 gc.fillRect(x[i], y[i], BODY_SIZE, BODY_SIZE);
+            }
+        }
+    }
+
+    public void drawBackground(GraphicsContext gc){
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                if ((i + j) % 2 == 0) {
+                    gc.setFill(Color.GREEN);
+                } else {
+                    gc.setFill(Color.DARKGREEN);
+                }
+                gc.fillRect(i * BODY_SIZE, j * BODY_SIZE, BODY_SIZE, BODY_SIZE);
             }
         }
     }

@@ -42,6 +42,9 @@ public class App extends Application{
     private long lastUpdateTime = 0;
     private final int updateInterval = 150; // 100 milliseconds
 
+    //Food variables
+    int appleX;
+    int appleY;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -86,7 +89,7 @@ public class App extends Application{
             }
         };
         gameLoop.start(); //Start the animation timer
-
+        
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Snake!");
@@ -94,9 +97,38 @@ public class App extends Application{
     }
 
     public void update(GraphicsContext gc){
+        move();
         drawBackground(gc);
         drawSnake(gc);
-        move();
+    }
+
+    //A function that moves the snake
+    private void move() {
+        for (int i = snakeBody; i > 0; i--) {    
+            x[i] = x[i - 1];
+            y[i] = y[i - 1];
+        }
+        switch(direction) {
+            case "R":
+                x[0] = x[0] + BODY_SIZE;
+                break;
+            case "L":
+                x[0] = x[0] - BODY_SIZE;
+                break;
+            case "U":
+                y[0] = y[0] - BODY_SIZE;
+                break;
+            case "D":
+                y[0] = y[0] + BODY_SIZE;
+                break;
+        }
+    }
+
+    public void drawApple(GraphicsContext gc){
+        appleX = (int) (Math.random() * COLUMNS);
+        appleY = (int) (Math.random() * ROWS);
+        gc.setFill(Color.RED);
+        gc.fillRect(appleX, appleY, BODY_SIZE, BODY_SIZE);
     }
 
     public void drawSnake(GraphicsContext gc){
@@ -126,27 +158,6 @@ public class App extends Application{
         }
     }
 
-    //A function that moves the snake
-    private void move() {
-        for (int i = snakeBody; i > 0; i--) {
-            x[i] = x[i - 1];
-            y[i] = y[i - 1];
-        }
-        switch(direction) {
-            case "R":
-                x[0] = x[0] + BODY_SIZE;
-                break;
-            case "L":
-                x[0] = x[0] - BODY_SIZE;
-                break;
-            case "U":
-                y[0] = y[0] - BODY_SIZE;
-                break;
-            case "D":
-                y[0] = y[0] + BODY_SIZE;
-                break;
-        }
-    }
     public static void main(String[] args) throws Exception {
         launch(args);
     }

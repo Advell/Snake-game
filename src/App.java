@@ -1,24 +1,16 @@
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
 import javafx.application.Application;
-
-
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-
 import javafx.stage.Stage;
-import javafx.util.Duration;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 
 public class App extends Application{
 
@@ -45,6 +37,9 @@ public class App extends Application{
     //Food variables
     int appleX;
     int appleY;
+    private static String appleImage = "/image/apple.png";
+    private Image foodImage;
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -89,7 +84,8 @@ public class App extends Application{
             }
         };
         gameLoop.start(); //Start the animation timer
-        
+        generateApple();
+
         stage.setScene(scene);
         stage.setResizable(false);
         stage.setTitle("Snake!");
@@ -100,6 +96,7 @@ public class App extends Application{
         move();
         drawBackground(gc);
         drawSnake(gc);
+        drawApple(gc);
     }
 
     //A function that moves the snake
@@ -124,11 +121,18 @@ public class App extends Application{
         }
     }
 
-    public void drawApple(GraphicsContext gc){
+    //This function generates an apple at a random location on the canvas
+    public void generateApple(){
         appleX = (int) (Math.random() * COLUMNS);
         appleY = (int) (Math.random() * ROWS);
-        gc.setFill(Color.RED);
-        gc.fillRect(appleX, appleY, BODY_SIZE, BODY_SIZE);
+        foodImage = new Image(appleImage);
+    }
+
+    /*
+    A function that draws the apple. This is a separate function so that it can be called from the update method continuously without
+    generating a new apple at a different location every frame.*/
+    public void drawApple(GraphicsContext gc){
+        gc.drawImage(foodImage, appleX * BODY_SIZE, appleY * BODY_SIZE, BODY_SIZE, BODY_SIZE);
     }
 
     public void drawSnake(GraphicsContext gc){

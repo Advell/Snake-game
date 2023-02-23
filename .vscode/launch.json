@@ -8,14 +8,15 @@
             "type": "java",
             "name": "Launch Current File",
             "request": "launch",
-            "mainClass": "${file}"
+            "mainClass": "${file}",
+            "cwd": "${workspaceFolder}/src"
         },
         {
             "type": "java",
             "name": "Launch App",
             "request": "launch",
             "mainClass": "App",
-            "projectName": "SnakeGame_a1ba2a81"
+            "projectName": "SnakeGame_a1ba2a81",
             "vmArgs": "--module-path \"/Users/mike/Documents/javafx-sdk-19/lib\" --add-modules javafx.controls,javafx.fxml"
         }
     ]

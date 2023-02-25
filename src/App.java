@@ -8,8 +8,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 
 public class App extends Application{
@@ -25,6 +23,8 @@ public class App extends Application{
     //Arrays of coordinates of the snake
     final int x[] = new int[MAX_UNITS];
     final int y[] = new int[MAX_UNITS];
+
+    //Direction of the snake, initial direction is right
     String direction = "R";
 
     //Initial snake size
@@ -37,7 +37,7 @@ public class App extends Application{
     //Food variables
     int appleX;
     int appleY;
-    private static String appleImage = "/image/apple.png";
+    String appleImage = "/image/apple.png";
     private Image foodImage;
 
 
@@ -96,7 +96,8 @@ public class App extends Application{
         move();
         drawBackground(gc);
         drawSnake(gc);
-        drawApple(gc);
+        placeAppleImage(gc);
+        eatApple();
     }
 
     //A function that moves the snake
@@ -131,7 +132,7 @@ public class App extends Application{
     /*
     A function that draws the apple. This is a separate function so that it can be called from the update method continuously without
     generating a new apple at a different location every frame.*/
-    public void drawApple(GraphicsContext gc){
+    public void placeAppleImage(GraphicsContext gc){
         gc.drawImage(foodImage, appleX * BODY_SIZE, appleY * BODY_SIZE, BODY_SIZE, BODY_SIZE);
     }
 
@@ -161,7 +162,14 @@ public class App extends Application{
             }
         }
     }
-
+    
+    public void eatApple(){
+        if(x[0] == appleX * BODY_SIZE && y[0] == appleY * BODY_SIZE){
+            snakeBody++;
+            generateApple();
+        }
+    }
+    
     public static void main(String[] args) throws Exception {
         launch(args);
     }

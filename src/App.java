@@ -3,6 +3,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -22,7 +23,7 @@ public class App extends Application{
 
     //Arrays of coordinates of the snake
     final int x[] = new int[MAX_UNITS];
-    final int y[] = new int[MAX_UNITS];
+    final int y[] = new int[MAX_UNITS];    
 
     //Direction of the snake, initial direction is right
     String direction = "R";
@@ -52,6 +53,11 @@ public class App extends Application{
 
         root.getChildren().add(canvas);
         Scene scene = new Scene(root, WIDTH, HEIGHT, Color.LIGHTGREEN);
+
+        Button restart = new Button("Restart!");
+
+        x[0] = 360;
+        y[0] = 360;
 
         root.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.RIGHT) {
@@ -110,8 +116,6 @@ public class App extends Application{
         for (int i = snakeBody; i > 0; i--) {    
             x[i] = x[i - 1];
             y[i] = y[i - 1];
-            System.out.println(x[0]);
-            System.out.println(y[0]);
         }
         switch(direction) {
             case "R":
@@ -181,6 +185,11 @@ public class App extends Application{
     public void gameOver() {
         if (x[0] < 0 || y[0] < 0 || x[0] > 760 || y[0] > 760) {
             gameOver = true;
+        }
+        for(int i = 1; i < x.length; i++) {
+            if(x[0] == x[i] && y[0] == y[i]) {
+               gameOver = true;
+            }
         }
     }
 

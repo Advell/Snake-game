@@ -40,6 +40,8 @@ public class App extends Application{
     String appleImage = "/image/apple.png";
     private Image foodImage;
 
+    private boolean gameOver = false;
+
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -76,11 +78,11 @@ public class App extends Application{
         //Create the animation timer which calls the update method on every frame
         AnimationTimer gameLoop = new AnimationTimer() {
             @Override
-            public void handle(long now) {                              // 1_000_000 nanoseconds
+            public void handle(long now) {
                 if (now - lastUpdateTime >= updateInterval * 1_000_000){ 
                     update(gc);
                     lastUpdateTime = now;
-                } 
+                }      
             }
         };
         gameLoop.start(); //Start the animation timer
@@ -93,11 +95,14 @@ public class App extends Application{
     }
 
     public void update(GraphicsContext gc){
-        move();
-        drawBackground(gc);
-        drawSnake(gc);
-        placeAppleImage(gc);
-        eatApple();
+        gameOver();
+        if(gameOver == false){ 
+            move();
+            drawBackground(gc);
+            drawSnake(gc);
+            placeAppleImage(gc);
+            eatApple();
+        }
     }
 
     //A function that moves the snake
@@ -105,6 +110,8 @@ public class App extends Application{
         for (int i = snakeBody; i > 0; i--) {    
             x[i] = x[i - 1];
             y[i] = y[i - 1];
+            System.out.println(x[0]);
+            System.out.println(y[0]);
         }
         switch(direction) {
             case "R":
@@ -127,6 +134,13 @@ public class App extends Application{
         appleX = (int) (Math.random() * COLUMNS);
         appleY = (int) (Math.random() * ROWS);
         foodImage = new Image(appleImage);
+    }
+
+    public void eatApple(){
+        if(x[0] == appleX * BODY_SIZE && y[0] == appleY * BODY_SIZE){
+            snakeBody++;
+            generateApple();
+        }
     }
 
     /*
@@ -163,13 +177,13 @@ public class App extends Application{
         }
     }
     
-    public void eatApple(){
-        if(x[0] == appleX * BODY_SIZE && y[0] == appleY * BODY_SIZE){
-            snakeBody++;
-            generateApple();
+    //Sets the conditions for the end of the game
+    public void gameOver() {
+        if (x[0] < 0 || y[0] < 0 || x[0] > 760 || y[0] > 760) {
+            gameOver = true;
         }
     }
-    
+
     public static void main(String[] args) throws Exception {
         launch(args);
     }

@@ -2,5 +2,5 @@
 
 2. If the snake is going in one direction ie. "right", pressing down and left or up and left rapidly causes the snake to collapse on itself and eat itself
 
-3. If the game over evet is triggered when the snake is at the centre, and then restarting the game, it will cause the next snake to eat the previous snake
-and thus trigger the game over again.
+3. When the game over event is triggered, then when the game is restarted, the 3 fields that the snake was occupying (head and two first pieces of the 
+body) will still count as the snake's body and will trigger the game over event if the new snake crosses them

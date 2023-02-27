@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
@@ -35,7 +36,7 @@ public class App extends Application{
 
     //Time variables
     private long lastUpdateTime = 0;
-    private final int updateInterval = 150; // 100 milliseconds
+    private final int updateInterval = 100000000; // 100 milliseconds
 
     //Food variables
     int appleX;
@@ -45,10 +46,13 @@ public class App extends Application{
 
     private boolean gameOver = false;
 
+    private int score = 0;
 
     @Override
     public void start(Stage stage) throws Exception {
         
+        //Parent root = (Parent) FXMLLoader.load(getClass().getResource("Main.fxml"));
+
         Pane pane = new Pane();
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         GraphicsContext gc = canvas.getGraphicsContext2D();
@@ -58,6 +62,18 @@ public class App extends Application{
 
         x[0] = 360;
         y[0] = 360;
+
+        //Create the animation timer which calls the update method on every frame
+        AnimationTimer gameLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if (now - lastUpdateTime >= updateInterval){ 
+                    update(gc);
+                    lastUpdateTime = now;
+                }      
+            }
+        };
+        gameLoop.start(); //Start the animation timer
 
         pane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.RIGHT) {
@@ -76,22 +92,23 @@ public class App extends Application{
                 if(direction != "U"){
                     direction = "D";
                 }
+            //Restart the below variables and call the methods to restart the game
+            } else if (event.getCode() == KeyCode.R) {
+                gameOver = false;
+                x[0] = 360;
+                y[0] = 360;      
+                snakeBody = 3;
+                score = 0;
+                drawSnake(gc); 
+                gameLoop.start(); 
+                generateApple();
+                placeAppleImage(gc);            
             }
         });
+    
         // Set the focus to the pane to receive key events
         pane.requestFocus();
 
-        //Create the animation timer which calls the update method on every frame
-        AnimationTimer gameLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                if (now - lastUpdateTime >= updateInterval * 1_000_000){ 
-                    update(gc);
-                    lastUpdateTime = now;
-                }      
-            }
-        };
-        gameLoop.start(); //Start the animation timer
         generateApple();
 
         stage.setScene(scene);
@@ -108,6 +125,13 @@ public class App extends Application{
             drawSnake(gc);
             placeAppleImage(gc);
             eatApple();
+            displayScore(gc);
+        } else {
+            gc.setFill(Color.RED);
+            gc.setFont(new Font("Digital-7", 60));
+            gc.fillText("Game Over", 260, 300);
+            gc.setFont(new Font("Digital-7", 40));
+            gc.fillText("Press R to restart!", 270, 400);
         }
     }
 
@@ -143,6 +167,7 @@ public class App extends Application{
     public void eatApple(){
         if(x[0] == appleX * BODY_SIZE && y[0] == appleY * BODY_SIZE){
             snakeBody++;
+            score ++;
             generateApple();
         }
     }
@@ -181,6 +206,12 @@ public class App extends Application{
         }
     }
     
+    public void displayScore(GraphicsContext gc){
+        gc.setFill(Color.WHITE);
+        gc.setFont(new Font("Digital-7", 35));
+        gc.fillText("Score: " + score, 10, 35);
+    }
+
     //Sets the conditions for the end of the game
     public void gameOver() {
         if (x[0] < 0 || y[0] < 0 || x[0] > 760 || y[0] > 760) {

@@ -1,5 +1,7 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -47,19 +49,17 @@ public class App extends Application{
     @Override
     public void start(Stage stage) throws Exception {
         
-        Pane root = new Pane();
+        Pane pane = new Pane();
         Canvas canvas = new Canvas(WIDTH, HEIGHT);
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
-        root.getChildren().add(canvas);
-        Scene scene = new Scene(root, WIDTH, HEIGHT, Color.LIGHTGREEN);
-
-        Button restart = new Button("Restart!");
+        pane.getChildren().add(canvas);
+        Scene scene = new Scene(pane, WIDTH, HEIGHT, Color.LIGHTGREEN);
 
         x[0] = 360;
         y[0] = 360;
 
-        root.setOnKeyPressed(event -> {
+        pane.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.RIGHT) {
                 if(direction != "L"){
                     direction = "R";
@@ -79,7 +79,7 @@ public class App extends Application{
             }
         });
         // Set the focus to the pane to receive key events
-        root.requestFocus();
+        pane.requestFocus();
 
         //Create the animation timer which calls the update method on every frame
         AnimationTimer gameLoop = new AnimationTimer() {

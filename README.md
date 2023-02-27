@@ -1,1 +1,1 @@
-An attempt to create the snake game in java using javafx
+A snake game written in Java with JavaFX

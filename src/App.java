@@ -41,7 +41,7 @@ public class App extends Application{
     //Food variables
     int appleX;
     int appleY;
-    String appleImage = "/image/apple.png";
+    String appleImage = "/image/mouse.png";
     private Image foodImage;
 
     private boolean gameOver = false;
@@ -101,15 +101,15 @@ public class App extends Application{
                 score = 0;
                 drawSnake(gc); 
                 gameLoop.start(); 
-                generateApple();
-                placeAppleImage(gc);            
+                generateMouse();
+                placeMouseImage(gc);            
             }
         });
     
         // Set the focus to the pane to receive key events
         pane.requestFocus();
 
-        generateApple();
+        generateMouse();
 
         stage.setScene(scene);
         stage.setResizable(false);
@@ -123,13 +123,13 @@ public class App extends Application{
             move();
             drawBackground(gc);
             drawSnake(gc);
-            placeAppleImage(gc);
-            eatApple();
+            placeMouseImage(gc);
+            eatMouse();
             displayScore(gc);
         } else {
-            gc.setFill(Color.RED);
+            gc.setFill(Color.WHEAT);
             gc.setFont(new Font("Digital-7", 60));
-            gc.fillText("Game Over", 260, 300);
+            gc.fillText("Game Over", 270, 300);
             gc.setFont(new Font("Digital-7", 40));
             gc.fillText("Press R to restart!", 270, 400);
         }
@@ -157,38 +157,37 @@ public class App extends Application{
         }
     }
 
-    //This function generates an apple at a random location on the canvas
-    public void generateApple(){
+    //This function generates a mouse at a random location on the canvas
+    public void generateMouse(){
         appleX = (int) (Math.random() * COLUMNS);
         appleY = (int) (Math.random() * ROWS);
         foodImage = new Image(appleImage);
     }
 
-    public void eatApple(){
+    public void eatMouse(){
         if(x[0] == appleX * BODY_SIZE && y[0] == appleY * BODY_SIZE){
             snakeBody++;
             score ++;
-            generateApple();
+            generateMouse();
         }
     }
 
     /*
-    A function that draws the apple. This is a separate function so that it can be called from the update method continuously without
-    generating a new apple at a different location every frame.*/
-    public void placeAppleImage(GraphicsContext gc){
+    A function that draws the mouse. This is a separate function so that it can be called from the update method continuously without
+    generating a new mouse at a different location every frame.*/
+    public void placeMouseImage(GraphicsContext gc){
         gc.drawImage(foodImage, appleX * BODY_SIZE, appleY * BODY_SIZE, BODY_SIZE, BODY_SIZE);
     }
 
     public void drawSnake(GraphicsContext gc){
+        gc.setFill(Color.web("669900"));
         //For loop to draw the snake
         for (int i = 0; i < snakeBody; i++) {
             if(i == 0){
-                gc.setFill(Color.BROWN);
-                gc.fillRect(x[i], y[i], BODY_SIZE, BODY_SIZE);
+                gc.fillOval(x[i], y[i], BODY_SIZE, BODY_SIZE);
             }
             else{
-                gc.setFill(Color.DARKKHAKI);
-                gc.fillRect(x[i], y[i], BODY_SIZE, BODY_SIZE);
+                gc.fillRoundRect(x[i], y[i], BODY_SIZE, BODY_SIZE, 20, 20);
             }
         }
     }
